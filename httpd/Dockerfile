@@ -5,7 +5,7 @@ FROM httpd
 COPY ./index.html /usr/local/apache2/htdocs/
 
 # set httpd.conf
-COPY ./httpd.con /usr/local/apache2/conf/httpd.conf
+COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
 
 # port
 EXPOSE 80
