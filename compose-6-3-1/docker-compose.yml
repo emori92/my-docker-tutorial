@@ -1,0 +1,37 @@
+version: '2'
+services:
+
+  # apache container
+  apache:
+    image: httpd
+    
+    # add index.html and httpd.conf
+    volumes:
+      - ./index.html:/usr/local/apache2/htdocs/index.html
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
+
+    # port of 'docker run'
+    ports:
+      - 80:80
+
+    #port of Dockerfile
+    expose:
+      - 80
+
+    # data volume container
+    volumes_from:
+      - apache-log
+
+  # data volume (apache logs)
+  apache-log:
+    image: busybox   
+
+    # data volume
+    volumes:
+      - apache-log-dv:/usr/local/apache2/logs/
+
+# data volume
+volumes:
+  
+  # data volume of apache log
+  apache-log-dv:

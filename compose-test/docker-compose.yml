@@ -1,0 +1,12 @@
+version: '2'
+services:
+  # create ubuntu container
+  ub-test:
+    image: ubuntu
+
+    # run bash
+    tty: true
+    stdin_open: true
+
+    # command
+    command: /bin/bash
