@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  # nginx`
+  rproxy-container:
+
+    # build Dockerfile
+    build: ./rproxy
+    ports:
+      - 80:80
+
+  # apache
+  web-container:
+    build: ./web

@@ -1,0 +1,69 @@
+version: '2'
+services:
+
+  # data volume MySQL
+  mysql-dv-ct:
+    image: busybox
+    volumes:
+      - mysql-dv:/var/lib/mysql
+
+  # MySQL
+  mysql:
+    image: mysql:5
+    # set password and create Database
+    environment:
+      - MYSQL_ROOT_PASSWORD=dbpass01
+      - MYSQL_DATABASE=redmine
+    # utf8
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # data volume
+    volumes_from:
+      - mysql-dv-ct
+    # run MySQL after data volume container
+    depends_on:
+      - mysql-dv-ct
+    # setup restart
+    restart: always
+
+  # phpMyAdmin
+  php-my-admin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=dbpass01
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql
+    restart: always
+
+  # Wordpress
+  wordpress:
+    image: wordpress
+    environment:
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=dbpass01
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+    restart: always
+
+  # Redmine
+  redmine:
+    image: redmine
+    environment:
+      - REDMINE_DB_MYSQL=mysql
+      - REDMINE_DB_USER=root
+      - REDMINE_DB_PASSWORD=dbpass01
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+    restart: always
+
+# create data volumes
+volumes:
+  mysql-dv:
